@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#080d1c">
+    <meta name="description" content="Faro Explorer: un navegador moderno, sencillo y diseñado para explorar internet.">
+
+    <title>Faro Explorer</title>
+    <link rel="icon" type="image/png" href="faro-favicon.png">
+
+    <style>
+        :root {
+            --bg: #080d1c;
+            --surface: #101a2d;
+            --surface-light: #16223a;
+            --border: #24314b;
+            --primary: #8195ff;
+            --primary-hover: #687fe9;
+            --text: #f4f6ff;
+            --muted: #9ba9c1;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 90px;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        a {
+            color: inherit;
+        }
+
+        button, a {
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        header {
+            height: 76px;
+            padding: 0 8%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(8, 13, 28, .92);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+            text-decoration: none;
+            letter-spacing: -1px;
+        }
+
+        .logo span {
+            color: var(--primary);
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        nav a {
+            color: var(--muted);
+            font-size: 14px;
+            text-decoration: none;
+            transition: .2s;
+        }
+
+        nav a:hover {
+            color: white;
+        }
+
+        .nav-download {
+            background: var(--primary);
+            color: #080d1c;
+            padding: 9px 17px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        .nav-download:hover {
+            background: white;
+            color: #080d1c;
+        }
+
+        .hero {
+            min-height: 590px;
+            padding: 110px 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background:
+                radial-gradient(ellipse at 50% 15%, #526de52b, transparent 65%);
+        }
+
+        .tag {
+            padding: 7px 16px;
+            margin-bottom: 26px;
+            border-radius: 30px;
+            border: 1px solid #354a7a;
+            background: #182448;
+            color: #a8b6ff;
+            font-size: 12px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .hero h1 {
+            font-size: clamp(44px, 8vw, 82px);
+            letter-spacing: -4px;
+            line-height: 1.1;
+            margin-bottom: 22px;
+        }
+
+        .hero h1 span {
+            color: var(--primary);
+        }
+
+        .hero p {
+            max-width: 600px;
+            color: var(--muted);
+            font-size: 17px;
+            margin-bottom: 12px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 13px;
+            margin-top: 27px;
+        }
+
+        .button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+            padding: 14px 24px;
+            border-radius: 9px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 14px;
+            transition: .25s;
+        }
+
+        .button-primary {
+            background: var(--primary);
+            color: #080d1c;
+        }
+
+        .button-primary:hover {
+            background: white;
+            transform: translateY(-3px);
+        }
+
+        .button-secondary {
+            border: 1px solid var(--border);
+            color: white;
+            background: #111a2d;
+        }
+
+        .button-secondary:hover {
+            border-color: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        .hero-note {
+            margin-top: 22px;
+            font-size: 12px;
+            color: #71809a;
+        }
+
+        .section {
+            max-width: 1150px;
+            margin: auto;
+            padding: 85px 25px;
+        }
+
+        .section-header {
+            margin-bottom: 35px;
+        }
+
+        .section-label {
+            color: var(--primary);
+            font-size: 12px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .section h2 {
+            font-size: 31px;
+            letter-spacing: -.8px;
+            margin: 7px 0;
+        }
+
+        .description {
+            color: var(--muted);
+            font-size: 15px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+        }
+
+        .card {
+            padding: 25px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 13px;
+            transition: .25s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            background: var(--surface-light);
+            border-color: var(--primary);
+        }
+
+        .card-icon {
+            font-size: 25px;
+            margin-bottom: 17px;
+        }
+
+        .card h3 {
+            font-size: 16px;
+            margin-bottom: 9px;
+        }
+
+        .card p {
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 22px;
+        }
+
+        .gallery-item {
+            min-width: 0;
+        }
+
+        .image {
+            height: 190px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: .35s;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.05);
+        }
+
+        .gallery-item p {
+            margin-top: 12px;
+            font-size: 14px;
+            color: #c3cce0;
+        }
+
+        .privacy {
+            padding: 30px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 13px;
+        }
+
+        .privacy h3 {
+            margin-bottom: 13px;
+            font-size: 19px;
+        }
+
+        .privacy p {
+            color: var(--muted);
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+
+        .privacy a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .privacy a:hover {
+            text-decoration: underline;
+        }
+
+        .servo-link {
+            display: inline-block;
+            margin-top: 10px;
+        }
+
+        footer {
+            padding: 30px 20px;
+            text-align: center;
+            border-top: 1px solid var(--border);
+            color: #77859d;
+            font-size: 13px;
+        }
+
+        footer span {
+            color: var(--primary);
+        }
+
+        @media (max-width: 900px) {
+            .info-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .gallery {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+            header {
+                height: auto;
+                min-height: 70px;
+                padding: 15px 20px;
+                flex-wrap: wrap;
+                gap: 13px;
+            }
+
+            nav {
+                width: 100%;
+                justify-content: space-between;
+                gap: 8px;
+            }
+
+            nav a {
+                font-size: 12px;
+            }
+
+            .nav-download {
+                padding: 6px 10px;
+            }
+
+            .hero {
+                min-height: 500px;
+                padding: 85px 20px;
+            }
+
+            .hero h1 {
+                letter-spacing: -2px;
+            }
+
+            .hero p {
+                font-size: 15px;
+            }
+
+            .section {
+                padding: 65px 20px;
+            }
+
+            .section h2 {
+                font-size: 26px;
+            }
+
+            .info-grid,
+            .gallery {
+                grid-template-columns: 1fr;
+            }
+
+            .image {
+                height: 210px;
+            }
+
+            .privacy {
+                padding: 22px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                scroll-behavior: auto !important;
+                transition-duration: .01ms !important;
+                animation-duration: .01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <a href="#" class="logo">Faro<span>.</span></a>
+
+    <nav aria-label="Navegación principal">
+        <a href="#information">Información</a>
+        <a href="#images">Galería</a>
+        <a href="#privacy">Privacidad</a>
+        <a href="https://drive.google.com/file/d/1Qfvl75BHkppq-9SpFqEq8iLuSHunkGwt/view?usp=sharing"
+          class="button button-primary"
+          target="_blank"
+          rel="noopener noreferrer">
+          ↓ Descargar para Windows
+        </a>
+    </nav>
+</header>
+
+<main>
+
+    <section class="hero">
+        <div class="tag">TU WEB, TU MANERA</div>
+
+        <h1>Faro <span>Explorer</span></h1>
+
+        <p>
+          Descubre una nueva experiencia de navegación con Faro Explorer.
+        </p>
+
+        <p>
+          Creado a base de servo, link de descarga de servo abajo de las políticas de privacidad 
+        </p>
+
+        <div class="hero-buttons">
+            <a href="https://drive.google.com/file/d/1Qfvl75BHkppq-9SpFqEq8iLuSHunkGwt/view?usp=sharing"
+              class="button button-primary"
+              target="_blank"
+              rel="noopener noreferrer">
+              ↓ Descargar para Windows
+            </a>
+
+            <a href="#information" class="button button-secondary">
+                Conocer más →
+            </a>
+        </div>
+
+        <div class="hero-note">
+            Faro Explorer · Navegador para Windows
+        </div>
+    </section>
+
+    <section class="section" id="information">
+
+        <div class="section-header">
+            <span class="section-label">Características</span>
+            <h2>Acerca de Faro Explorer</h2>
+            <p class="description">
+                Conoce lo que hace especial a Faro Explorer.
+            </p>
+        </div>
+
+        <div class="info-grid">
+
+            <div class="card">
+                <div class="card-icon">🌐</div>
+                <h3>Motor del navegador</h3>
+                <p>Hecho con servo Browser</p>
+            </div>
+
+            <div class="card">
+                <div class="card-icon">⚡</div>
+                <h3>Rendimiento</h3>
+                <p>Una experiencia de navegación pensada para ser fluida y sencilla.</p>
+            </div>
+
+            <div class="card">
+                <div class="card-icon">🎨</div>
+                <h3>Interfaz moderna</h3>
+                <p>Un diseño limpio, agradable y fácil de utilizar.</p>
+            </div>
+
+            <div class="card">
+                <div class="card-icon">🔒</div>
+                <h3>Privacidad</h3>
+                <p>Consulta nuestra información sobre privacidad y uso de datos.</p>
+            </div>
+
+        </div>
+    </section>
+
+    <section class="section" id="images">
+
+        <div class="section-header">
+            <span class="section-label">Capturas</span>
+            <h2>Conoce su interfaz</h2>
+            <p class="description">
+                Un vistazo al diseño y funcionamiento de Faro Explorer.
+            </p>
+        </div>
+
+        <div class="gallery">
+
+            <div class="gallery-item">
+                <div class="image">
+                    <img src="images/image1.png" alt="Pantalla principal de Faro Explorer" loading="lazy">
+                </div>
+                <p>Pantalla principal</p>
+            </div>
+
+            <div class="gallery-item">
+                <div class="image">
+                    <img src="images/image2.png" alt="Experiencia de navegación" loading="lazy">
+                </div>
+                <p>Experiencia de navegación</p>
+            </div>
+
+            <div class="gallery-item">
+                <div class="image">
+                    <img src="images/image3.png" alt="Interfaz del navegador" loading="lazy">
+                </div>
+                <p>Interfaz del navegador</p>
+            </div>
+
+            <div class="gallery-item">
+                <div class="image">
+                    <img src="images/image4.png" alt="Diseño de Faro Explorer" loading="lazy">
+                </div>
+                <p>Diseño de Faro Explorer</p>
+            </div>
+
+            <div class="gallery-item">
+                <div class="image">
+                    <img src="images/image5.png" alt="Más características de Faro Explorer" loading="lazy">
+                </div>
+                <p>Más de Faro Explorer</p>
+            </div>
+
+        </div>
+    </section>
+
+    <section class="section" id="privacy">
+
+        <div class="section-header">
+            <span class="section-label">Transparencia</span>
+            <h2>Política de privacidad</h2>
+            <p class="description">
+                Tu privacidad importa.
+            </p>
+        </div>
+
+        <div class="privacy">
+            <h3>Faro Explorer Privacy Policy</h3>
+
+            <p>
+                Faro Explorer busca respetar la privacidad de sus usuarios.
+                La información que se recopila y procesa depende de las
+                funciones de la aplicación y de los servicios utilizados.
+            </p>
+
+            <p>
+                Al navegar por internet, los sitios web que visitas pueden
+                recopilar información de acuerdo con sus propias políticas
+                de privacidad.
+            </p>
+
+            <p>
+                Si tienes dudas, sugerencias o deseas reportar un error,
+                puedes ponerte en contacto con el equipo de Faro Explorer.
+            </p>
+
+        </div>
+        <a href="https://servo.org/" target="_blank" rel="noopener noreferrer" class="servo-link">
+                Servo Browser ↗
+            </a>
+    </section>
+
+</main>
+
+<footer>
+    © 2026 <span>Faro Explorer</span>. Todos los derechos reservados.
+</footer>
+
+</body>
+</html>
